@@ -1,7 +1,7 @@
 Name
 ====
 
-lua-resty-odbc - Lua odbc client driver for the ngx_lua
+lua-resty-odbc - Lua ODBC Client Driver for the ngx_lua
 
 Table of Contents
 =================
