@@ -1,7 +1,7 @@
 Name
 ====
 
-lua-resty-transaction-queue - Lua Transaction Queue for the ngx_lua
+lua-resty-odbc - Lua odbc client driver for the ngx_lua
 
 Table of Contents
 =================
@@ -40,7 +40,7 @@ This Lua library is a ODBC client driver for the ngx_lua nginx module:
 
 https://github.com/openresty/lua-nginx-module/#readme
 
-This Module is implementation of ODBC database access standard based on Lua. It wraps the unix-ODBC C library and is a fully asynchronous model. Developers can use this module in a synchronous manner, which simplifies business development complexity. In addition, the module also provides long transaction timeout detection and abort capabilities. Developers can send sql to the database by the ODBC asynchronous interface and set execute timeout. if the query execute timeout, the module can detect and automatically kill the connection
+This Module is implementation of ODBC database access standard based on Lua. It wraps the unix-ODBC C library and is a fully asynchronous model. Developers can use this module in a synchronous manner, which simplifies business development complexity. In addition, the module also provides long transaction timeout detection and abort capabilities. Developers can send sql to the database by the ODBC asynchronous interface and set execution timeout. if the query execution timeout, the module can detect and automatically kill the connection
 
 Synopsis
 ========
@@ -118,7 +118,7 @@ All APIs provided by this module are the same as the API names defined by the OD
 
 https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/odbc-api-reference?view=sql-server-2017
 
-It should be noted that the argumentss of some APIs provided by this module are different from the argumentss in the ODBC API documentation. As follows:
+It should be noted that the arguments of some APIs provided by this module are different from the arguments in the ODBC API documentation. As follows:
 
 ```lua
   ODBC standard:
@@ -288,7 +288,7 @@ arguments
 SQLExecuteAsync
 ---------------
 
-Asynchronous executes a prepared statement, using the current values of the parameter marker variables if any parameter markers exist in the statement.
+Executes a prepared statement asynchronously, using the current values of the parameter marker variables if any parameter markers exist in the statement.
 
 syntax
 ------
