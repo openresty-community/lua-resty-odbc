@@ -421,10 +421,18 @@ TODO
 Author
 ======
 
+Guangshu Wang (Wesley) <guangshu.wgs@antfin.com>, Ant Financial Inc.
+
 [Back to TOC](#table-of-contents)
 
 Copyright and License
 =====================
+
+This module is licensed under the BSD license.
+
+Copyright (C) 2019, by Guangshu Wang (Wesley) <guangshu.wgs@antfin.com>, Ant Financial Inc.
+
+All rights reserved.
 
 [Back to TOC](#table-of-contents)
 
