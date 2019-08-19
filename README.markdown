@@ -72,7 +72,7 @@ Synopsis
                   return
                 end
             
-                local retcode, connOut, len = odbc.SQLDriverConnect(hdbc, nil, "DSN=odbctest", odbc.SQL_NTS, odbc.SQL_DRIVER_NOPROMPT);
+                local retcode, connOut = odbc.SQLDriverConnect(hdbc, nil, "DSN=odbctest", odbc.SQL_NTS, odbc.SQL_DRIVER_NOPROMPT);
                 if retcode then
                   return
                 end
