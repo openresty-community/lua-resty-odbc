@@ -46,7 +46,7 @@ Synopsis
 ========
 
 ```lua
-    lua_package_path "/path/to/lua-resty-odbc/lib/?.lua;;";
+    lua_package_cpath "/path/to/lua-resty-odbc/lib/?.so;;";
 
     server {
         location /test {
