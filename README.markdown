@@ -36,11 +36,11 @@ Status
 Description
 ===========
 
-This Lua library  is a Transaction Queue for the ngx_lua nginx module:
+This Lua library is a ODBC client driver for the ngx_lua nginx module:
 
 https://github.com/openresty/lua-nginx-module/#readme
 
-基于定时器的异步请求队列实现，worker 内共享，允许设置多个不同优先级别的异步队列及其队列长度，主要用于 HTTP 请求异步处理场景。Nginx接收到HTTP请求后可以先应答，后面再将请求异步提交到 Transaction Queue。
+This Module is implementation of ODBC database access standard based on Lua. It wraps the unix-ODBC C library and is a fully asynchronous model. Developers can use this module in a synchronous manner, which simplifies business development complexity. In addition, the module also provides long transaction timeout detection and abort capabilities. Developers can send sql to the database by the ODBC asynchronous interface and set execute timeout. if the query execute timeout, the module can detect and automatically kill the connection
 
 Synopsis
 ========
@@ -114,252 +114,297 @@ Synopsis
 Methods
 =======
 
-本模块提供的所有 API 都跟 ODBC 标准定义的 API 名字相同。可以在下面的文档中获取完整的 API 列表：
+All APIs provided by this module are the same as the API names defined by the ODBC standard. A complete list of APIs can be found in the documentation below:
 
-https://docs.microsoft.com/zh-cn/sql/odbc/reference/syntax/odbc-api-reference?view=sql-server-2017
+https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/odbc-api-reference?view=sql-server-2017
 
-需要注意的是，本模块提供的部分 API 的parameter与 ODBC API 文档里的parameter不同。比如 SQLAllocHandle 方法：
+It should be noted that the argumentss of some APIs provided by this module are different from the argumentss in the ODBC API documentation. As follows:
 
 ```lua
-  ODBC 标准定义： 
+  ODBC standard:
     SQLRETURN SQLAllocHandle(SQLSMALLINT HandleType, SQLHANDLE InputHandle, SQLHANDLE *OutputHandle);
 
-  本模块 API：
+  define in this module:
     function _M.SQLAllocHandle(handleType, inputHandle)
     end
 ```
+The first return value of all APIs is retcode, Must be one of the following values: SQL_SUCCESS, SQL_SUCCESS_WITH_INFO, SQL_ERROR, SQL_INVALID_HANDLE, or SQL_STILL_EXECUTING
 
 [Back to TOC](#table-of-contents)
 
 SQLAllocHandle
 --------------
 
+Allocates an environment, connection, statement, or descriptor handle
+
 syntax
 ------
 
-retcode, henv = odbc.SQLAllocHandle(HandleType, InputHandle);
+retcode, handle = odbc.SQLAllocHandle(HandleType, InputHandle);
 
-parameter 
+arguments 
 ----
 
-`HandleType`  主要由 SQLAllocHandle 分配的句柄的类型。 必须是下列值之一: SQL_HANDLE_DBC, SQL_HANDLE_DESC, SQL_HANDLE_ENV, SQL_HANDLE_STMT
+`HandleType`  The type of handle to be allocated by SQLAllocHandle. Must be one of the following values: SQL_HANDLE_DBC, SQL_HANDLE_DESC, SQL_HANDLE_ENV, SQL_HANDLE_STMT
 
-`InputHandle` 在其上下文中要分配新句柄的输入句柄。 如果HandleType为 SQL_HANDLE_ENV, 则为 SQL_NULL_HANDLE。 如果HandleType为 SQL_HANDLE_DBC, 则该句柄必须为环境句柄, 如果为 SQL_HANDLE_STMT 或 SQL_HANDLE_DESC, 则必须是连接句柄。`
+`InputHandle` The input handle in whose context the new handle is to be allocated. If HandleType is SQL_HANDLE_ENV, this is SQL_NULL_HANDLE. If HandleType is SQL_HANDLE_DBC, this must be an environment handle, and if it is SQL_HANDLE_STMT or SQL_HANDLE_DESC, it must be a connection handle.
+
+returns
+------
+
+`handle` The newly allocated handle
 
 [Back to TOC](#table-of-contents)
 
 SQLSetEnvAttr
 -------------
 
+Sets attributes that govern aspects of environments
+
 syntax
 ------
 
 retcode = odbc.SQLSetEnvAttr(EnvironmentHandle, Attribute, Value);
 
-parameter
+arguments
 ----
 
-`EnvironmentHandle` 环境句柄
+`EnvironmentHandle` Environment handle
 
-`Attribute` 要设置的属性, 参考 ODBC 标准
+`Attribute` Attribute to set, Reference ODBC standard
 
-`Value` 指向要与属性关联的值
+`Value` The value to be associated with Attribute
 
 [Back to TOC](#table-of-contents)
 
 SQLSetConnectAttr
 -----------------
 
+Sets attributes that govern aspects of connections
+
 syntax
 ------
 
 retcode = odbc.SQLSetConnectAttr(ConnectionHandle, Attribute, Value)
 
-parameter
+arguments
 ----
 
-`ConnectionHandle` 连接句柄
+`ConnectionHandle` Connection handle
 
-`Attribute` 要设置的属性,  参考 ODBC 标准
+`Attribute` Attribute to set, Reference ODBC standard
 
-`Value` 指向要与属性关联的值
+`Value` The value to be associated with Attribute
 
 [Back to TOC](#table-of-contents)
 
 SQLSetStmtAttr
 --------------
 
+Sets attributes related to a statement
+
 syntax
 ------
 
 retcode = odbc.SQLSetStmtAttr(StatementHandle, Attribute, Value)
 
-parameter
+arguments
 ----
 
-`StatementHandle` 语句句柄
+`StatementHandle` Statement handle
 
-`Attribute` 要设置的属性,  参考 ODBC 标准
+`Attribute` Attribute to set, Reference ODBC standard
 
-`Value` 指向要与属性关联的值
+`Value` The value to be associated with Attribute
 
 [Back to TOC](#table-of-contents)
 
 SQLDriverConnect
 ----------------
 
+Establish a connection
+
 syntax
 ------
 
-retcode, connOut, len = odbc.SQLDriverConnect(ConnectionHandle, WindowHandle, InConnectionString, DriverCompletion);
+retcode, connOut = odbc.SQLDriverConnect(ConnectionHandle, WindowHandle, InConnectionString, DriverCompletion);
 
-parameter
+arguments
 ----
 
-`ConnectionHandle` 连接句柄
+`ConnectionHandle` Connection handle
 
-`WindowHandle` 窗口句柄。 应用程序可以通过父窗口的句柄，如果适用，或如果是 null 指针的窗口句柄不适用或 SQLDriverConnect 将不显示任何对话框
+`WindowHandle` Window handle. The application can pass the handle of the parent window, if applicable, or a null pointer if either the window handle is not applicable or SQLDriverConnect will not present any dialog boxes
 
-`InConnectionString` 完整的连接字符串, 参考 ODBC 标准
+`InConnectionString` A full connection string, Reference ODBC standard
 
-`DriverCompletion` 该标志指示驱动程序管理器或驱动程序必须提示输入连接的详细信息：SQL_DRIVER_PROMPT、 SQL_DRIVER_COMPLETE、 SQL_DRIVER_COMPLETE_REQUIRED 时或 SQL_DRIVER_NOPROMPT
+`DriverCompletion` Flag that indicates whether the Driver Manager or driver must prompt for more connection information: SQL_DRIVER_PROMPT, SQL_DRIVER_COMPLETE, SQL_DRIVER_COMPLETE_REQUIRED, SQL_DRIVER_NOPROMPT
+
+returns
+------
+
+`connOut` The completed connection string. Upon successful connection to the target data source, this contains the completed connection string.
 
 [Back to TOC](#table-of-contents)
 
 SQLPrepare
 ----------
 
-retcode = odbc.SQLPrepare(StatementHandle, StatementText);
+Prepares an SQL string for execution
 
 syntax
 ------
 
-`StatementHandle` 语句句柄
+retcode = odbc.SQLPrepare(StatementHandle, StatementText);
 
-`StatementText` 要执行的 SQL
-
-parameter
+arguments
 ----
+
+`StatementHandle` Statement handle
+
+`StatementText` SQL text string
 
 [Back to TOC](#table-of-contents)
 
 SQLExecute
 ----------
 
+Executes a prepared statement, using the current values of the parameter marker variables if any parameter markers exist in the statement.
+
 syntax
 ------
 
 retcode = odbc.SQLExecute(StatementHandle, Timeout);
 
-parameter
+arguments
 ----
 
-`StatementHandle` 语句句柄
+`StatementHandle` Statement handle
 
-`Timeout` 超时时间
+`Timeout` Set execute timeout
 
 [Back to TOC](#table-of-contents)
 
 SQLExecuteAsync
 ---------------
 
+Asynchronous executes a prepared statement, using the current values of the parameter marker variables if any parameter markers exist in the statement.
+
 syntax
 ------
 
 retcode = odbc.SQLExecuteAsync(ConnectionHandle, StatementHandle, Timeout);
 
-parameter
+arguments
 --------
 
-`ConnectionHandle` 连接句柄
+`ConnectionHandle` Connection handle
 
-`StatementHandle` 语句句柄
+`StatementHandle` Statement handle
 
-`Timeout` 超时时间
+`Timeout` Set execute timeout
 
 [Back to TOC](#table-of-contents)
 
 SQLBindCol
 ----------
 
+Binds application data buffers to columns in the result set
+
 syntax
 ------
 
 retcode, col, res = odbc.SQLBindCol(StatementHandle, ColumnNumber, TargetType);
 
-parameter
+arguments
 ----
 
-`StatementHandle` 语句句柄
+`StatementHandle` Statement handle
 
-`ColumnNumber` 要绑定的列集的结果数。 列中从 0 开始，其中第 0 列书签列的列顺序递增编号。 如果不使用书签-也就是说，SQL_ATTR_USE_BOOKMARKS 语句属性设置为 SQL_UB_OFF-然后列号从 1 开始
+`ColumnNumber` Number of the result set column to bind. Columns are numbered in increasing column order starting at 0, where column 0 is the bookmark column. If bookmarks are not used - that is, the SQL_ATTR_USE_BOOKMARKS statement attribute is set to SQL_UB_OFF - then column numbers start at 1
 
-`TargetType` C 数据类型的标识符
+`TargetType` The identifier of the C data type
+
+returns
+------
+
+`col` The data buffer to bind to the column. SQLFetch and SQLFetchScroll return data in this buffer
+
+`res` The length/indicator buffer to bind to the column. SQLFetch and SQLFetchScroll return a value in this buffer
 
 [Back to TOC](#table-of-contents)
 
 SQLFetch
 --------
 
+Fetches the next rowset of data from the result set and returns data for all bound columns
+
 syntax
 ------
 
 retcode = odbc.SQLFetch(StatementHandle)
 
-parameter
+arguments
 ---------
 
-`StatementHandle` 语句句柄
+`StatementHandle` Statement handle
 
 [Back to TOC](#table-of-contents)
 
 SQLExecDirect
 -------------
 
+Executes a preparable statement, using the current values of the parameter marker variables if any parameters exist in the statement. SQLExecDirect is the fastest way to submit an SQL statement for one-time execution
+
 syntax
 ------
 
 retcode = SQLExecDirect(StatementHandle, StatementText, Timeout)
 
-parameter
+arguments
 ----
 
-`StatementHandle` 语句句柄
+`StatementHandle` Statement handle
 
-`StatementText` 若要执行的 SQL 语句
+`StatementText` SQL statement to be executed
 
-`Timeout` 超时时间
+`Timeout` Set execute timeout
 
 [Back to TOC](#table-of-contents)
 
 SQLFreeHandle
 -------------
 
+Frees resources associated with a specific environment, connection, statement, or descriptor handle
+
 syntax
 ------
 
 retcode = odbc.SQLFreeHandle(HandleType, Handle);
 
-parameter
+arguments
 ----
 
-`HandleType` 要由SQLFreeHandle释放的句柄的类型。 必须是下列值之一:SQL_HANDLE_DBC, SQL_HANDLE_DESC, SQL_HANDLE_ENV, SQL_HANDLE_STMT. 如果HandleType不是这些值之一, SQLFREEHANDLE将返回 SQL_INVALID_HANDLE
-`Handle` 要释放的句柄
+`HandleType` The type of handle to be freed by SQLFreeHandle. Must be one of the following values: SQL_HANDLE_DBC, SQL_HANDLE_DESC, SQL_HANDLE_ENV, SQL_HANDLE_STMT. If HandleType is not one of these values, SQLFreeHandle returns SQL_INVALID_HANDLE.
+
+`Handle` The handle to be freed
 
 [Back to TOC](#table-of-contents)
 
 SQLDisconnect
 -------------
 
+Closes the connection associated with a specific connection handle
+
 syntax
 ------
 
 retcode = odbc.SQLDisconnect(ConnectionHandle);
 
-parameter
+arguments
 ---------
 
-`ConnectionHandle` 连接句柄
+`ConnectionHandle` Connection handle
 
 [Back to TOC](#table-of-contents)
 

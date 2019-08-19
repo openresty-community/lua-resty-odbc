@@ -121,6 +121,8 @@ ffi.cdef[[
 local handle_type = ffi.typeof("SQLHANDLE[1]")
 local smallint_type = ffi.typeof("SQLSMALLINT[1]")
 local integer_type = ffi.typeof("SQLINTEGER[1]")
+local MAX_NAME_LEN = 1024
+local szConnStrOut_ptr = ffi.new("char[?]", MAX_NAME_LEN + 1)
 
 function _M.checkError(henv, hdbc, hstmt)
   local len = ffi.new(smallint_type)
@@ -173,12 +175,9 @@ function _M.SQLDriverConnect(hdbc, hwnd, szConnStrIn, fDriverCompletion)
   local szConnStrIn_ptr = ffi.new("char[?]", #szConnStrIn)
   ffi.copy(szConnStrIn_ptr, szConnStrIn)
 
-  local MAX_NAME_LEN = 255
-  local szConnStrOut_ptr = ffi.new("char[?]", MAX_NAME_LEN + 1)
-
   local len = ffi.new(smallint_type)
   local retcode = odbc.SQLDriverConnect(hdbc, hwnd, szConnStrIn_ptr, #szConnStrIn, szConnStrOut_ptr, MAX_NAME_LEN, len, fDriverCompletion)
-  return retcode, ffi.string(szConnStrOut_ptr, MAX_NAME_LEN), len[0]
+  return retcode, ffi.string(szConnStrOut_ptr, len[0])
 end
 
 function _M.SQLPrepare(hstmt, sql)
