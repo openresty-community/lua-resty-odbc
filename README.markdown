@@ -119,18 +119,34 @@ https://docs.microsoft.com/zh-cn/sql/odbc/reference/syntax/odbc-api-reference?vi
 SQLAllocHandle
 --------------
 
-`syntax retcode, henv = odbc.SQLAllocHandle(HandleType, InputHandle);`
+syntax
+------
+
+retcode, henv = odbc.SQLAllocHandle(HandleType, InputHandle);
+
 参数 
 ----
-`HandleType`
-  主要由 SQLAllocHandle 分配的句柄的类型。 必须是下列值之一:
-SQL_HANDLE_DBC
-SQL_HANDLE_DESC
-SQL_HANDLE_ENV
-SQL_HANDLE_STMT
 
-`InputHandle`
-在其上下文中要分配新句柄的输入句柄。 如果HandleType为 SQL_HANDLE_ENV, 则为 SQL_NULL_HANDLE。 如果HandleType为 SQL_HANDLE_DBC, 则该句柄必须为环境句柄, 如果为 SQL_HANDLE_STMT 或 SQL_HANDLE_DESC, 则必须是连接句柄。`
+`HandleType`  主要由 SQLAllocHandle 分配的句柄的类型。 必须是下列值之一: SQL_HANDLE_DBC, SQL_HANDLE_DESC, SQL_HANDLE_ENV, SQL_HANDLE_STMT
+
+`InputHandle` 在其上下文中要分配新句柄的输入句柄。 如果HandleType为 SQL_HANDLE_ENV, 则为 SQL_NULL_HANDLE。 如果HandleType为 SQL_HANDLE_DBC, 则该句柄必须为环境句柄, 如果为 SQL_HANDLE_STMT 或 SQL_HANDLE_DESC, 则必须是连接句柄。`
+
+SQLSetEnvAttr
+-------------
+
+syntax
+------
+
+retcode = odbc.SQLSetEnvAttr(EnvironmentHandle, Attribute, Value);
+
+参数
+----
+
+`EnvironmentHandle` 环境句柄
+
+`Attribute` 要设置的属性, 参考 ODBC 标准
+
+`Value` 指向要与属性关联的值
 
 Limitations
 ===========
