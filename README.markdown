@@ -129,6 +129,8 @@ https://docs.microsoft.com/zh-cn/sql/odbc/reference/syntax/odbc-api-reference?vi
     end
 ```
 
+[Back to TOC](#table-of-contents)
+
 SQLAllocHandle
 --------------
 
@@ -143,6 +145,8 @@ parameter
 `HandleType`  主要由 SQLAllocHandle 分配的句柄的类型。 必须是下列值之一: SQL_HANDLE_DBC, SQL_HANDLE_DESC, SQL_HANDLE_ENV, SQL_HANDLE_STMT
 
 `InputHandle` 在其上下文中要分配新句柄的输入句柄。 如果HandleType为 SQL_HANDLE_ENV, 则为 SQL_NULL_HANDLE。 如果HandleType为 SQL_HANDLE_DBC, 则该句柄必须为环境句柄, 如果为 SQL_HANDLE_STMT 或 SQL_HANDLE_DESC, 则必须是连接句柄。`
+
+[Back to TOC](#table-of-contents)
 
 SQLSetEnvAttr
 -------------
@@ -161,6 +165,8 @@ parameter
 
 `Value` 指向要与属性关联的值
 
+[Back to TOC](#table-of-contents)
+
 SQLSetConnectAttr
 -----------------
 
@@ -178,6 +184,8 @@ parameter
 
 `Value` 指向要与属性关联的值
 
+[Back to TOC](#table-of-contents)
+
 SQLSetStmtAttr
 --------------
 
@@ -194,6 +202,8 @@ parameter
 `Attribute` 要设置的属性,  参考 ODBC 标准
 
 `Value` 指向要与属性关联的值
+
+[Back to TOC](#table-of-contents)
 
 SQLDriverConnect
 ----------------
@@ -214,6 +224,8 @@ parameter
 
 `DriverCompletion` 该标志指示驱动程序管理器或驱动程序必须提示输入连接的详细信息：SQL_DRIVER_PROMPT、 SQL_DRIVER_COMPLETE、 SQL_DRIVER_COMPLETE_REQUIRED 时或 SQL_DRIVER_NOPROMPT
 
+[Back to TOC](#table-of-contents)
+
 SQLPrepare
 ----------
 
@@ -229,20 +241,24 @@ syntax
 parameter
 ----
 
+[Back to TOC](#table-of-contents)
+
 SQLExecute
 ----------
 
-retcode = odbc.SQLExecute(StatementHandle, Timeout);
-
 syntax
 ------
+
+retcode = odbc.SQLExecute(StatementHandle, Timeout);
+
+parameter
+----
 
 `StatementHandle` 语句句柄
 
 `Timeout` 超时时间
 
-parameter
-----
+[Back to TOC](#table-of-contents)
 
 SQLExecuteAsync
 ---------------
@@ -261,6 +277,8 @@ parameter
 
 `Timeout` 超时时间
 
+[Back to TOC](#table-of-contents)
+
 SQLBindCol
 ----------
 
@@ -278,6 +296,8 @@ parameter
 
 `TargetType` C 数据类型的标识符
 
+[Back to TOC](#table-of-contents)
+
 SQLFetch
 --------
 
@@ -290,6 +310,8 @@ parameter
 ---------
 
 `StatementHandle` 语句句柄
+
+[Back to TOC](#table-of-contents)
 
 SQLExecDirect
 -------------
@@ -308,6 +330,8 @@ parameter
 
 `Timeout` 超时时间
 
+[Back to TOC](#table-of-contents)
+
 SQLFreeHandle
 -------------
 
@@ -322,6 +346,8 @@ parameter
 `HandleType` 要由SQLFreeHandle释放的句柄的类型。 必须是下列值之一:SQL_HANDLE_DBC, SQL_HANDLE_DESC, SQL_HANDLE_ENV, SQL_HANDLE_STMT. 如果HandleType不是这些值之一, SQLFREEHANDLE将返回 SQL_INVALID_HANDLE
 `Handle` 要释放的句柄
 
+[Back to TOC](#table-of-contents)
+
 SQLDisconnect
 -------------
 
@@ -334,6 +360,8 @@ parameter
 ---------
 
 `ConnectionHandle` 连接句柄
+
+[Back to TOC](#table-of-contents)
 
 Limitations
 ===========
