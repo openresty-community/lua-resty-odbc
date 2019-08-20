@@ -1,6 +1,6 @@
 local ffi = require "ffi"
 local ngx_odbc = require "ngx.odbc"
-local _M = { _VERSION = '0.0.1' }
+local _M = { _VERSION = '1.0' }
 local mt = { __index = _M }
 local conn_table = {}
 
